@@ -13,7 +13,7 @@ app.set("views" , "views")
 app.use(express.urlencoded({extended: true}))
 app.use(session({ secret: "notgoodsecrete" }))
 
-mongoose.connect('mongodb://192.168.43.171:27017/authDemo' , {useNewUrlParser: true , })
+mongoose.connect('mongodb://192.168.8.144:27017/authDemo' , {useNewUrlParser: true , })
 .then(()=>{
     console.log("Mongo Connection Open")
 })
@@ -25,6 +25,14 @@ mongoose.connect('mongodb://192.168.43.171:27017/authDemo' , {useNewUrlParser: t
 app.get('/register' , (req, res)=>{
     res.render("register")
 })
+
+//below adding middel ware for secure multiple end point
+const requireLogin = (req, res , next)=>{
+    if(! req.session.user_id) {
+        return res.redirect('/login')
+    }
+    next();
+}
 
 app.get('/' , (req ,res)=>{
     res.send("This is Home Page")
@@ -69,10 +77,18 @@ app.post('/logout' ,(req ,res)=>{
     req.session.destroy(); //to destory the entire session
     res.redirect("/login")
 })
-app.get('/secret' , (req, res)=>{
+app.get('/secret' , requireLogin , (req, res)=>{
     if(!req.session.user_id)return res.redirect('/login')
 
     res.render("secret")
+})
+
+//just add requireLogin to the parameter, it is function we define above
+//it will protect each route unless you logged in
+//otherwise any body can access your other routes
+
+app.get('/secret1' , requireLogin ,(req, res)=>{
+    res.send("Hi i'm Secret 1 , to secure me unless login using middelware")
 })
 
 app.listen(3000 , ()=> console.log("Serving Your Application"))
