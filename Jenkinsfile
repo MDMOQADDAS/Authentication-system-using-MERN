@@ -20,7 +20,7 @@ pipeline{
                 
                sh "docker rm -rf myapp || true"
                 
-               sh docker run -d --name myapp basicapp:${BUILD_NUMBER}
+               sh "docker run -d --name myapp basicapp:${BUILD_NUMBER}"
 
                 
             }
