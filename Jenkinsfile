@@ -4,6 +4,7 @@ pipeline{
     stages{
         stage("SCM"){
             steps{
+               
                 git 'https://github.com/MDMOQADDAS/Authentication-system-using-MERN.git'
             }
         }

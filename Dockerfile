@@ -5,6 +5,7 @@ WORKDIR /myapp
 COPY  * ./
 
 COPY views/ /myapp/views/
+COPY models/ /myapp/models/
 
 RUN npm i
 
