@@ -17,13 +17,14 @@ pipeline{
 
         stage("Test"){
             steps{
-                sh '''
-                if( docker ps myapp ||  date ){
-                    docker rm -f myapp
+                
+                if ( sh " docker ps myapp" ||  sh " date "){
+                   sh " docker rm -f myapp "
                 }
+                
                 docker run -d --name myapp basicapp:${BUILD_NUMBER}
 
-                '''
+                
             }
         }
 
